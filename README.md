@@ -1,5 +1,8 @@
 # Convolucao 1D
 
+# Graficos no doc
+(https://docs.google.com/spreadsheets/d/1cK6e0UM3dsao9MdpZ-j0a601xRuQ7RKH49ijTCTXsM0/edit?usp=sharing)
+
 ```java
 import java.util.Random;
 
@@ -72,7 +75,7 @@ public class App {
         }
 
         
-        
+        /*
         System.out.println("\n\n");
         for (int n = 0; n < numAmostras; n++) {
             System.out.printf("\t%.5f\n", s[n]);
@@ -88,11 +91,12 @@ public class App {
         for (int n = 0; n < tamSaida; n++) {
             System.out.printf("\t%.6f\n", y[n]);
         }
+        */
         
     }
 }
 ```
-# Convolucao 4x4
+# Convolucao 4x4 (exemplo simples)
 ```java
 import java.util.Random;
 
