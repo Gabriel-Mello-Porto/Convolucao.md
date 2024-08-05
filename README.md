@@ -237,7 +237,7 @@ def main():
 
 
 
-
+    # Graficos
     n = np.zeros(num_amostras)
     for i in range(num_amostras):
         n[i] = i
@@ -250,9 +250,138 @@ def main():
         n[i] = i
     
     plt.plot(n,y, color='g')
+
+    plt.title('Azul = s[n]    Vermelho = x[n]     Verde = y[n]    a = 0.5')
+    plt.xlabel('Amostras')
+    plt.ylabel('Sinal')
+    plt.grid(True)
+    plt.xlim(0, 400)
     plt.show()
 
 
 if __name__ == "__main__":
     main()
+```
+
+# 2D (not it)
+```java
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+
+public class ImageConvolution {
+
+    public static void main(String[] args) {
+        try {
+            // Carregar a imagem em escala de cinza
+            BufferedImage image = ImageIO.read(new File("C:\\Users\\Larissa\\Downloads\\Hacker da Guatemala\\Sistemas e Sinais\\ImageHandling\\Joseph Fourier.jpg"));
+            int width = image.getWidth();
+            int height = image.getHeight();
+
+            // Definir os kernels
+            int[][] blurKernel = {
+                {1, 1, 1},
+                {1, 1, 1},
+                {1, 1, 1}
+            };
+            int blurKernelSum = 9; // Soma dos valores do kernel de suavização
+
+            int[][] edgeDetectionKernel = {
+                {-1, -1, -1},
+                {-1,  8, -1},
+                {-1, -1, -1}
+            };
+            int edgeDetectionKernelSum = 1; // Não há necessidade de normalizar o kernel de detecção de bordas
+
+            // Criar imagens para armazenar os resultados
+            BufferedImage blurImage = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
+            BufferedImage edgeImage = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
+
+            // Aplicar o filtro de suavização
+            applyFilter(image, blurImage, blurKernel, blurKernelSum);
+
+            // Aplicar o filtro de detecção de bordas
+            applyFilter(image, edgeImage, edgeDetectionKernel, edgeDetectionKernelSum);
+
+            // Exibir as imagens lado a lado
+            JFrame frame = new JFrame("Imagem Original, Suavização e Detecção de Bordas");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(width * 3, height);
+
+            // Crie um JPanel com GridLayout para exibir três imagens lado a lado
+            JPanel panel = new JPanel(new GridLayout(1, 3));
+
+            // Adicione a imagem original ao painel
+            ImageIcon originalIcon = new ImageIcon(image);
+            JLabel originalLabel = new JLabel(originalIcon);
+            panel.add(originalLabel);
+
+            // Adicione a imagem com suavização ao painel
+            ImageIcon blurIcon = new ImageIcon(blurImage);
+            JLabel blurLabel = new JLabel(blurIcon);
+            panel.add(blurLabel);
+
+            // Adicione a imagem com detecção de bordas ao painel
+            ImageIcon edgeIcon = new ImageIcon(edgeImage);
+            JLabel edgeLabel = new JLabel(edgeIcon);
+            panel.add(edgeLabel);
+
+            // Adicione o painel ao frame
+            frame.add(panel);
+            frame.setVisible(true);
+
+            // Salvar as imagens resultantes
+            ImageIO.write(blurImage, "jpg", new File("imagem_suavizacao.jpg"));
+            ImageIO.write(edgeImage, "jpg", new File("imagem_deteccao_bordas.jpg"));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void applyFilter(BufferedImage image, BufferedImage resultImage, int[][] kernel, int kernelSum) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+        int kernelSize = kernel.length;
+        int offset = kernelSize / 2;
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int newValue = applyKernel(image, kernel, kernelSum, x, y);
+                // Aplicar limitador para a imagem de detecção de bordas
+                if (kernelSum == 1) { // Para detecção de bordas
+                    newValue = Math.min(255, Math.max(0, newValue));
+                }
+                int rgb = (newValue << 16) | (newValue << 8) | newValue;
+                resultImage.setRGB(x, y, rgb);
+            }
+        }
+    }
+
+    private static int applyKernel(BufferedImage image, int[][] kernel, int kernelSum, int x, int y) {
+        int sum = 0;
+        int kernelSize = kernel.length;
+        int offset = kernelSize / 2;
+
+        // Iterar sobre o kernel e aplicar a convolução
+        for (int ky = 0; ky < kernelSize; ky++) {
+            for (int kx = 0; kx < kernelSize; kx++) {
+                // Verificar se o pixel está dentro dos limites da imagem
+                int px = x + kx - offset;
+                int py = y + ky - offset;
+                if (px >= 0 && px < image.getWidth() && py >= 0 && py < image.getHeight()) {
+                    int pixel = image.getRGB(px, py);
+                    int gray = (pixel >> 16) & 0xFF; // Assumindo imagem em escala de cinza
+                    sum += gray * kernel[ky][kx];
+                }
+            }
+        }
+
+        // Normalizar pelo valor da soma do kernel
+        return sum / kernelSum;
+    }
+}
 ```
