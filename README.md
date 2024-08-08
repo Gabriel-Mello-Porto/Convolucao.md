@@ -70,26 +70,6 @@ public class App {
         for (int n = tamSaida - numAmostras + 1; n < tamSaida; n++) {
             System.out.printf("%d\t                                %.3f\n", n, y[n]);
         }
-
-        
-        /*
-        System.out.println("\n\n");
-        for (int n = 0; n < numAmostras; n++) {
-            System.out.printf("\t%.5f\n", s[n]);
-        }
-        
-
-        System.out.println("\n\n");
-        for (int n = 0; n < numAmostras; n++) {
-            System.out.printf("\t%.6f\n", x[n]);
-        }
-
-        System.out.println("\n\n");
-        for (int n = 0; n < tamSaida; n++) {
-            System.out.printf("\t%.6f\n", y[n]);
-        }
-        */
-        
     }
 }
 ```
