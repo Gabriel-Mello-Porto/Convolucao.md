@@ -7,7 +7,7 @@ public class App {
     public static void main(String[] args) {    
         
         // Parametro da frequencia de corte e numero de amostras
-        int numAmostras = 50;
+        int numAmostras = 200;
         double a = 0.5;
 
         // Entrada e saida
@@ -16,20 +16,13 @@ public class App {
         double[] x = new double[numAmostras];
      
         // Impulso
-        double[] h = new double[numAmostras];
-        double[] h_Invertido = new double[numAmostras];     
+        double[] h = new double[numAmostras]; 
 
 
-        // Calcula iterativamente a resposta ao impulso e inverte o vetor
+        // Calcula iterativamente a resposta ao impulso
         for (int n = 0; n < numAmostras; n++) {
             h[n] = (1 - a) * Math.pow(a, n);
-            //System.out.printf("\n%.5f", h[n]);
         }
-
-        for (int i = 0; i < h.length; i++) {
-            h_Invertido[i] = h[h.length - i - 1];
-        }
-
 
         // Calcula iterativamente s[n]
         for (int n = 0; n < numAmostras; n++) {
@@ -39,17 +32,16 @@ public class App {
         // Calcula o ruido
         Random numAleatorio = new Random();
         for (int n = 0; n < numAmostras; n++) {
-            ruido[n] = numAleatorio.nextDouble(-0.2, 0.2); // Amplitude máxima 0.2
+            ruido[n] = numAleatorio.nextDouble(-0.2, 0.2); // Amplitude maxima 0.2
         }
 
         // Gerar o sinal corrompido x[n]
         for (int n = 0; n < numAmostras; n++) {
             x[n] = s[n] + ruido[n];
-            //x[n] = s[n];
         }
 
 
-        // Calcular a convolução para obter o sinal filtrado y[n]
+        // Calcular a convolucao para obter o sinal filtrado y[n]
         int tamSaida = x.length + h.length - 1; // Tamanho do vetor resultante
         double[] y = new double[tamSaida];
         for (int i = 0; i < tamSaida; i++) {
@@ -64,7 +56,7 @@ public class App {
         // Exibir todos os resultados
         System.out.println("\nn\ts[n]\tr[n]\tx[n]\th[n]\ty[n]");
         for (int n = 0; n < numAmostras; n++) {
-            System.out.printf("%d\t%.3f\t%.3f\t%.3f\t%.3f\t%.3f\n", n, s[n], ruido[n], x[n], h_Invertido[n], y[n]);
+            System.out.printf("%d\t%.3f\t%.3f\t%.3f\t%.3f\t%.3f\n", n, s[n], ruido[n], x[n], h[n], y[n]);
         }
 
         for (int n = tamSaida - numAmostras + 1; n < tamSaida; n++) {
