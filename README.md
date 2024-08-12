@@ -3,7 +3,7 @@
 ```java
 import java.util.Random;
 
-public class App {
+public class Convolucao1D {
     public static void main(String[] args) {    
         
         // Parametro da frequencia de corte e numero de amostras
@@ -18,13 +18,12 @@ public class App {
         // Impulso
         double[] h = new double[numAmostras]; 
 
-
-        // Calcula iterativamente a resposta ao impulso
+        // Calcula a resposta ao impulso
         for (int n = 0; n < numAmostras; n++) {
             h[n] = (1 - a) * Math.pow(a, n);
         }
 
-        // Calcula iterativamente s[n]
+        // Calcula s[n]
         for (int n = 0; n < numAmostras; n++) {
             s[n] = (Math.sin(0.05 * n)) + (0.5 * Math.sin(0.15 * n));
         }
@@ -44,6 +43,7 @@ public class App {
         // Calcular a convolucao para obter o sinal filtrado y[n]
         int tamSaida = x.length + h.length - 1; // Tamanho do vetor resultante
         double[] y = new double[tamSaida];
+        
         for (int i = 0; i < tamSaida; i++) {
             y[i] = 0;
             for (int j = 0; j < h.length; j++) {
@@ -77,17 +77,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-public class ImageConvolution {
+public class Convolucao2D {
 
-    // Função para ler uma imagem em escala de cinza
-    public static BufferedImage lerImagem(String caminho) throws IOException {
-        BufferedImage imagemColorida = ImageIO.read(new File(caminho));
-        BufferedImage imagemCinza = new BufferedImage(imagemColorida.getWidth(), imagemColorida.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
-        imagemCinza.getGraphics().drawImage(imagemColorida, 0, 0, null);
-        return imagemCinza;
-    }
-
-    // Função que realiza a convolução 2D
+    // Funcao que realiza a convolucao 2D
     public static double[][] convoluir(double[][] imagem, double[][] kernel) {
         int larguraImagem = imagem[0].length;
         int alturaImagem = imagem.length;
@@ -112,7 +104,15 @@ public class ImageConvolution {
         return imagemFiltrada;
     }
 
-    // Função para converter BufferedImage para matriz 2D de pixels
+    // Funcao para ler uma imagem em escala de cinza
+    public static BufferedImage lerImagem(String caminho) throws IOException {
+        BufferedImage imagemColorida = ImageIO.read(new File(caminho));
+        BufferedImage imagemCinza = new BufferedImage(imagemColorida.getWidth(), imagemColorida.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
+        imagemCinza.getGraphics().drawImage(imagemColorida, 0, 0, null);
+        return imagemCinza;
+    }
+
+    // Funcao para converter imagem para matriz 2D de pixels
     public static double[][] imagemParaMatriz(BufferedImage imagem) {
         int largura = imagem.getWidth();
         int altura = imagem.getHeight();
@@ -127,7 +127,7 @@ public class ImageConvolution {
         return matriz;
     }
 
-    // Função para salvar a matriz 2D de pixels em uma imagem
+    // Funcao para salvar a matriz 2D de pixels em uma imagem
     public static BufferedImage matrizParaImagem(double[][] matriz) {
         int altura = matriz.length;
         int largura = matriz[0].length;
@@ -142,12 +142,12 @@ public class ImageConvolution {
         return imagem;
     }
 
-    // Função para exibir as imagens em uma janela
+    // Funcao para exibir as imagens
     public static void exibirImagens(BufferedImage original, BufferedImage suavizada, BufferedImage bordas) {
         // Cria uma janela
-        JFrame frame = new JFrame("Exibição de Imagens");
+        JFrame frame = new JFrame("");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(new GridLayout(1, 3)); // Layout para exibir três imagens lado a lado
+        frame.setLayout(new GridLayout(1, 3)); // Layout
 
         // Adiciona a imagem original
         JLabel labelOriginal = new JLabel(new ImageIcon(original));
@@ -178,7 +178,9 @@ public class ImageConvolution {
     public static void main(String[] args) {
         try {
             // Caminho para o arquivo de imagem
-            String caminhoImagem = "C:\\Users\\gabri\\Downloads\\College\\Engenharia certa\\Sistema e Sinais\\Convoluçao\\220px-Joseph_Fourier.jpg";
+            //String caminhoImagem = "imgs\\Joseph Fourier.jpg";
+            //String caminhoImagem = "imgs\\Alan Turing.jpg";
+            String caminhoImagem = "imgs\\Albert Einsterin.jpg";
 
             // Leitura da imagem
             BufferedImage imagemOriginal = lerImagem(caminhoImagem);
@@ -186,7 +188,7 @@ public class ImageConvolution {
             // Conversão para matriz 2D
             double[][] matrizImagem = imagemParaMatriz(imagemOriginal);
 
-            // Definição dos kernels
+            // Kernels
             double[][] kernelSuavizacao = {
                 {1 / 9.0, 1 / 9.0, 1 / 9.0},
                 {1 / 9.0, 1 / 9.0, 1 / 9.0},
@@ -199,18 +201,17 @@ public class ImageConvolution {
                 {-1, -1, -1}
             };
 
-            // Aplicação do kernel de suavização
+            // Aplicacoes da convolucao
             double[][] imagemSuavizada = convoluir(matrizImagem, kernelSuavizacao);
-
-            // Aplicação do kernel de detecção de bordas
             double[][] imagemBordas = convoluir(matrizImagem, kernelBordas);
 
-            // Conversão das matrizes resultantes para imagens
+            // Conversao das matrizes resultantes para imagens
             BufferedImage imagemSuavizadaFinal = matrizParaImagem(imagemSuavizada);
             BufferedImage imagemBordasFinal = matrizParaImagem(imagemBordas);
 
             // Exibe as imagens na tela
             exibirImagens(imagemOriginal, imagemSuavizadaFinal, imagemBordasFinal);
+            
 
         } catch (IOException e) {
             e.printStackTrace();
