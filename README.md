@@ -178,9 +178,11 @@ public class Convolucao2D {
     public static void main(String[] args) {
         try {
             // Caminho para o arquivo de imagem
-            //String caminhoImagem = "imgs\\Joseph Fourier.jpg";
-            //String caminhoImagem = "imgs\\Alan Turing.jpg";
-            String caminhoImagem = "imgs\\Albert Einsterin.jpg";
+            String caminhoImagem = "imgs/Albert Einstein.jpg";
+            //String caminhoImagem = "imgs/Leonhard Paul Euler.jpg";
+            //String caminhoImagem = "imgs/Joseph Fourier.jpg";
+            //String caminhoImagem = "imgs/Alan Turing.jpg";
+            //String caminhoImagem = "imgs/Johann Gauss.png";
 
             // Leitura da imagem
             BufferedImage imagemOriginal = lerImagem(caminhoImagem);
